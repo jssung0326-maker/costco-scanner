@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="코스트코 계산기" />
+  <title>코스트코 가격 계산기</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">개인용 장보기 계산기</div>
+        <h1>코스트코 계산기</h1>
+      </div>
+      <button id="resetBtn" class="ghost danger">초기화</button>
+    </header>
+
+    <section class="total-card">
+      <div class="label">현재 합계</div>
+      <div id="grandTotal" class="grand-total">0원</div>
+      <div id="summary" class="summary">0종 · 0개</div>
+    </section>
+
+    <section class="camera-card">
+      <div class="camera-wrap">
+        <video id="video" playsinline muted></video>
+        <canvas id="canvas" hidden></canvas>
+        <div class="scan-guide dual-guide">
+          <div class="barcode-guide">
+            <span>① 상품의 바코드</span>
+          </div>
+          <div class="price-guide">
+            <span>② 진열대의 가격 숫자</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="camera-actions">
+        <button id="startCameraBtn" class="secondary">카메라 켜기</button>
+        <button id="captureBtn" class="capture" disabled aria-label="상품 추가"></button>
+      </div>
+
+      <div id="status" class="status">카메라를 켜주세요.</div>
+      <div class="hint">
+        상품 바코드와 진열대 가격 숫자를 한 화면에 넣고 촬영하세요. 촬영 1회 = 상품 1개 추가입니다.
+      </div>
+    </section>
+
+    <section id="detectedPanel" class="detected-panel hidden">
+      <div class="detected-title">인식 결과</div>
+      <div class="detected-grid">
+        <div>
+          <span>상품 바코드</span>
+          <strong id="detectedBarcode">-</strong>
+        </div>
+        <div>
+          <span>진열대 가격</span>
+          <strong id="detectedPrice">-</strong>
+        </div>
+      </div>
+      <div class="confirm-row">
+        <button id="retryBtn" class="ghost">다시 읽기</button>
+        <button id="addDetectedBtn" class="primary">장바구니 추가</button>
+      </div>
+    </section>
+
+    <section class="manual-card">
+      <details>
+        <summary>인식이 잘 안되면 직접 입력</summary>
+        <div class="manual-grid">
+          <input id="manualBarcode" inputmode="numeric" placeholder="바코드 또는 상품번호" />
+          <input id="manualPrice" inputmode="numeric" placeholder="가격 (예: 12990)" />
+          <button id="manualAddBtn" class="primary">1개 추가</button>
+        </div>
+      </details>
+    </section>
+
+    <section class="cart-section">
+      <div class="section-head">
+        <h2>장바구니</h2>
+        <button id="undoBtn" class="ghost" disabled>↶ 방금 추가 취소</button>
+      </div>
+      <div id="cartList" class="cart-list">
+        <div class="empty">아직 추가된 상품이 없습니다.</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
