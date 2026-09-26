@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="코스트코 계산기" />
+  <title>코스트코 가격 계산기</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">개인용 장보기 계산기 · V4</div>
+        <h1>코스트코 계산기</h1>
+      </div>
+      <button id="resetBtn" class="ghost danger">초기화</button>
+    </header>
+
+    <section class="total-card">
+      <div class="label">현재 합계</div>
+      <div id="grandTotal" class="grand-total">0원</div>
+      <div id="summary" class="summary">0종 · 0개</div>
+    </section>
+
+    <section class="flow-card">
+      <div class="steps">
+        <div id="stepBarcode" class="step active">
+          <div class="step-no">1</div>
+          <div><b>상품 바코드</b><small id="barcodeState">아직 안 읽음</small></div>
+        </div>
+        <div class="arrow">→</div>
+        <div id="stepPrice" class="step">
+          <div class="step-no">2</div>
+          <div><b>진열대 가격</b><small id="priceState">대기 중</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="camera-card">
+      <div class="mode-tabs">
+        <button id="barcodeModeBtn" class="mode active">① 바코드 읽기</button>
+        <button id="priceModeBtn" class="mode" disabled>② 가격 읽기</button>
+      </div>
+
+      <div class="camera-wrap">
+        <video id="video" playsinline muted></video>
+        <canvas id="canvas" hidden></canvas>
+        <div id="barcodeGuide" class="scan-guide">
+          <div class="barcode-guide">
+            <strong>상품 포장지 바코드</strong>
+            <span>바코드가 네모 안에 크게 보이게 맞추세요.</span>
+          </div>
+        </div>
+        <div id="priceGuide" class="scan-guide hidden">
+          <div class="price-guide">
+            <strong>진열대 가격</strong>
+            <span>판매가격 숫자만 네모 안에 크게 맞추세요.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="camera-actions">
+        <button id="startCameraBtn" class="secondary">카메라 켜기</button>
+        <button id="captureBtn" class="capture" disabled aria-label="스캔"></button>
+      </div>
+
+      <div id="status" class="status">카메라를 켜주세요.</div>
+      <div class="hint" id="hint">
+        먼저 상품의 바코드를 읽고, 다음 화면에서 진열대 가격을 읽습니다.
+      </div>
+    </section>
+
+    <section id="pairPanel" class="detected-panel hidden">
+      <div class="detected-title">상품 확인</div>
+      <div class="detected-grid">
+        <div>
+          <span>상품 바코드</span>
+          <strong id="detectedBarcode">-</strong>
+        </div>
+        <div>
+          <span>진열대 가격</span>
+          <strong id="detectedPrice">-</strong>
+        </div>
+      </div>
+      <div class="selected-qty">
+        <span>구입 수량</span>
+        <div class="selected-qty-controls">
+          <button id="selectedMinusBtn" class="qty-btn" aria-label="수량 감소">−</button>
+          <strong id="selectedQty">1</strong>
+          <button id="selectedPlusBtn" class="qty-btn" aria-label="수량 증가">＋</button>
+        </div>
+      </div>
+      <div class="confirm-row">
+        <button id="cancelSelectionBtn" class="ghost danger-soft">선택 취소</button>
+        <button id="addSelectedBtn" class="primary">장바구니에 추가</button>
+      </div>
+    </section>
+
+    <section class="manual-card">
+      <details>
+        <summary>인식이 잘 안되면 직접 입력</summary>
+        <div class="manual-grid">
+          <input id="manualBarcode" inputmode="numeric" placeholder="바코드 또는 상품번호" />
+          <input id="manualPrice" inputmode="numeric" placeholder="가격 (예: 12990)" />
+          <button id="manualAddBtn" class="primary">1개 추가</button>
+        </div>
+      </details>
+    </section>
+
+    <section class="cart-section">
+      <div class="section-head">
+        <h2>장바구니</h2>
+        <button id="undoBtn" class="ghost" disabled>↶ 방금 추가 취소</button>
+      </div>
+      <div id="cartList" class="cart-list">
+        <div class="empty">아직 추가된 상품이 없습니다.</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
